@@ -145,7 +145,6 @@ def rozetka_company(file_name):
 
 def allo_company(file_name):
 
-
     allo = Gmail_message()
     allo.compare_data(file_name, 'АЛЛО', 'Allo')
 
@@ -154,6 +153,8 @@ def allo_company(file_name):
     allo.write_to_gsheets('Allo', partner_email_1, partner_email_2)
 
     #allo.send_gmail('Allo')
+
+    
 def foxtrot_company(file_name):
 
     foxtrot = Gmail_message()
