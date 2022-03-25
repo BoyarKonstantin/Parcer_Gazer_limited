@@ -1,9 +1,10 @@
 from asyncio import SendfileNotAvailableError
 import datetime as DT
+import time
 from typing import List, Tuple, Union
+from pathlib import Path
 # pip install pandas
 import pandas as pd
-# pip install selenium
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import csv
@@ -57,7 +58,7 @@ class Gmail_message():
 
                     demping_name = row['Name MTI']
                     price_MTI = row['Price MTI']
-                    demping_price = row[company_name]
+                    demping_price = row[company_name].strip('грн').strip('.')
                     
                     rows =  demping_name,  price_MTI, demping_price
                     demping.append(rows)
@@ -139,13 +140,23 @@ def rozetka_company(file_name):
     partner_email_2 = ''
     rozetka.write_to_gsheets('Rozetka', partner_email_1, partner_email_2)
    
-    rozetka.send_gmail('Rozetka')
+   # rozetka.send_gmail('Rozetka')
+
+def allo_company(file_name):
+
+
+    allo = Gmail_message()
+    allo.compare_data(file_name, 'АЛЛО', 'Allo')
+
+    partner_email_1 = ''
+    partner_email_2 = ''
+    allo.write_to_gsheets('Allo', partner_email_1, partner_email_2)
 
 
 if __name__ == '__main__':
 
     file_name = 'write_to_csv.csv'
     main(file_name)
-    rozetka_company(file_name)
-
+   # rozetka_company(file_name)
+    allo_company(file_name)
 
