@@ -53,15 +53,16 @@ class Gmail_message():
 
                 if row['Price MTI'] > row[company_name]:
 
-                    if row[company_name] == '#N/A' or row[company_name] == '-' or row[company_name] == '' or row[company_name] == row['Price MTI']:
+                    if row[company_name] == '#N/A' or row[company_name] == '-' or row[company_name] == '' or row['Price MTI'] == row[company_name] or row['Price MTI'] == '':
                         continue
-
+                    
                     demping_name = row['Name MTI']
-                    price_MTI = row['Price MTI']
-                    demping_price = row[company_name].strip('грн').strip('.').strip('₴')
+                    price_MTI = row['Price MTI'].replace('\xa0', '').replace(' ', '')
+                    demping_price = row[company_name].strip('грн').strip('.').strip('₴').replace('\xa0', '').replace(' ', '')
                     
                     rows =  demping_name,  price_MTI, demping_price
-                    demping.append(rows)
+                    if int(price_MTI) - 1 > int(demping_price) :
+                        demping.append(rows)
 
         #Создание нового csv файла с уже готовым списом нарушения РРЦ           
         df = pd.DataFrame(demping, columns=['Name','Actual price', 'Your price'])
@@ -100,7 +101,6 @@ class Gmail_message():
         upload_csv = client.import_csv(sheet_with_demping.id, content)
         print('Create new Gsheet tabel successful')
         return sheet_with_demping
-
 
     def send_gmail(self, company_name):
 
@@ -154,8 +154,6 @@ def allo_company(file_name):
     allo.write_to_gsheets('Allo', partner_email_1, partner_email_2)
 
     #allo.send_gmail('Allo')
-
-
 def foxtrot_company(file_name):
 
     foxtrot = Gmail_message()
@@ -166,7 +164,6 @@ def foxtrot_company(file_name):
     foxtrot.write_to_gsheets('Foxtrot', partner_email_1, partner_email_2)
 
     #foxtrot.send_gmail('Allo')
-
 
 if __name__ == '__main__':
 
@@ -181,5 +178,5 @@ if __name__ == '__main__':
 
    # allo_company(file_name)
 
-   #Работает почти хорошо, но выводит одинаковые значения 
-   # foxtrot_company(file_name)
+   #Работает почти хорошо, но выводит одинаковые значени я
+    foxtrot_company(file_name)
