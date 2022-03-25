@@ -1,15 +1,9 @@
 from asyncio import SendfileNotAvailableError
 import datetime as DT
-import time
 from typing import List, Tuple, Union
-from pathlib import Path
 # pip install pandas
 import pandas as pd
-from selenium.webdriver.common.by import By
 # pip install selenium
-from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
-from selenium.common.exceptions import NoSuchElementException
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import csv
