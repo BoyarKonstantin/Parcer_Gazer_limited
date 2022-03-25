@@ -70,7 +70,7 @@ class Gmail_message():
         print(f'file saved to {file_name_to_write}.csv')  
 
     #Метод создания таблицы Gsheets с нарушением цены на сайте партнере
-    def write_to_gsheets(self, company_name):
+    def write_to_gsheets(self, company_name, parthner_email_1, parthner_email_2):
 
         scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 
@@ -87,8 +87,8 @@ class Gmail_message():
         sheet_with_demping.share('n.boyar@gazer.com', perm_type = 'user', role = 'writer')
         sheet_with_demping.share('v.samoylenko@gazer.com', perm_type = 'user', role = 'writer')
         sheet_with_demping.share('p.gulyk@gazer.com', perm_type = 'user', role = 'writer')
-        sheet_with_demping.share(f'partner_email_1', perm_type = 'user', role = 'writer')
-        sheet_with_demping.share(f'partner_email_2', perm_type = 'user', role = 'writer')
+        sheet_with_demping.share(f'{partner_email_1}', perm_type = 'user', role = 'writer')
+        sheet_with_demping.share(f'{partner_email_2}', perm_type = 'user', role = 'writer')
 
         #Выгрузка из созданного ранее файла csv в Gsheets
         upload_csv = client.import_csv(sheet_with_demping.id, content)
@@ -110,13 +110,14 @@ def rozetka_company(file_name):
     
     rozetka = Gmail_message()
     rozetka.compare_data(file_name, 'Розетка', 'Rozetka')
-    rozetka.write_to_gsheets('Rozetka')
     partner_email_1 = ''
     partner_email_2 = ''
+    rozetka.write_to_gsheets('Rozetka', partner_email_1, partner_email_2)
+   
+
+
 if __name__ == '__main__':
 
     file_name = 'write_to_csv.csv'
     main(file_name)
     rozetka_company(file_name)
-
-
