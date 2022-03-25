@@ -53,12 +53,12 @@ class Gmail_message():
 
                 if row['Price MTI'] > row[company_name]:
 
-                    if row[company_name] == '#N/A' or row[company_name] == '-' or row[company_name] == '':
+                    if row[company_name] == '#N/A' or row[company_name] == '-' or row[company_name] == '' or row[company_name] == row['Price MTI']:
                         continue
 
                     demping_name = row['Name MTI']
                     price_MTI = row['Price MTI']
-                    demping_price = row[company_name].strip('грн').strip('.')
+                    demping_price = row[company_name].strip('грн').strip('.').strip('₴')
                     
                     rows =  demping_name,  price_MTI, demping_price
                     demping.append(rows)
@@ -100,6 +100,7 @@ class Gmail_message():
         upload_csv = client.import_csv(sheet_with_demping.id, content)
         print('Create new Gsheet tabel successful')
         return sheet_with_demping
+
 
     def send_gmail(self, company_name):
 
@@ -152,11 +153,33 @@ def allo_company(file_name):
     partner_email_2 = ''
     allo.write_to_gsheets('Allo', partner_email_1, partner_email_2)
 
+    #allo.send_gmail('Allo')
+
+
+def foxtrot_company(file_name):
+
+    foxtrot = Gmail_message()
+    foxtrot.compare_data(file_name, 'Фокстрот', 'Foxtrot')
+
+    partner_email_1 = ''
+    partner_email_2 = ''
+    foxtrot.write_to_gsheets('Foxtrot', partner_email_1, partner_email_2)
+
+    #foxtrot.send_gmail('Allo')
+
 
 if __name__ == '__main__':
 
     file_name = 'write_to_csv.csv'
     main(file_name)
-   # rozetka_company(file_name)
-    allo_company(file_name)
 
+   # Розетка работает отлично
+
+   # rozetka_company(file_name)
+    
+   # Разобраться с ценами, часто выйгружает одинаковые, возможно проблема в библиотеке
+
+   # allo_company(file_name)
+
+   #Работает почти хорошо, но выводит одинаковые значения 
+   # foxtrot_company(file_name)
