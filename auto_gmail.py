@@ -3,7 +3,6 @@ import datetime as DT
 import time
 from typing import List, Tuple, Union
 from pathlib import Path
-# pip install pandas
 import pandas as pd
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
