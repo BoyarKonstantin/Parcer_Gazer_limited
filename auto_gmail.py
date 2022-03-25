@@ -1,3 +1,4 @@
+from asyncio import SendfileNotAvailableError
 import datetime as DT
 import time
 from typing import List, Tuple, Union
@@ -12,6 +13,9 @@ from selenium.common.exceptions import NoSuchElementException
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import csv
+import smtplib
+from password import *
+from email.mime.text import MIMEText
 
 
 class Gmail_message():
@@ -69,8 +73,9 @@ class Gmail_message():
         df.to_csv(file_name_to_write, encoding='UTF-8')          
         print(f'file saved to {file_name_to_write}.csv')  
 
+
     #Метод создания таблицы Gsheets с нарушением цены на сайте партнере
-    def write_to_gsheets(self, company_name, parthner_email_1, parthner_email_2):
+    def write_to_gsheets(self, company_name, partner_email_1, partner_email_2):
 
         scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 
@@ -81,22 +86,48 @@ class Gmail_message():
 
         #создал новую таблцу
         sheet_with_demping = client.create(f'{company_name} | {DT.datetime.now():%Y-%m-%d}')
+
+        global sheet_id  
+        sheet_id = sheet_with_demping.id
         print(sheet_with_demping)
+
         #Доступ к таблице
         sheet_with_demping.share('k.boyar@gazer.com', perm_type = 'user', role = 'writer')
         sheet_with_demping.share('n.boyar@gazer.com', perm_type = 'user', role = 'writer')
-        sheet_with_demping.share('v.samoylenko@gazer.com', perm_type = 'user', role = 'writer')
-        sheet_with_demping.share('p.gulyk@gazer.com', perm_type = 'user', role = 'writer')
-        sheet_with_demping.share(f'{partner_email_1}', perm_type = 'user', role = 'writer')
-        sheet_with_demping.share(f'{partner_email_2}', perm_type = 'user', role = 'writer')
+
+        #sheet_with_demping.share('v.samoylenko@gazer.com', perm_type = 'user', role = 'writer')
+        #sheet_with_demping.share('p.gulyk@gazer.com', perm_type = 'user', role = 'writer')
+
+        #sheet_with_demping.share(f'{partner_email_1}', perm_type = 'user', role = 'writer')
+        #sheet_with_demping.share(f'{partner_email_2}', perm_type = 'user', role = 'writer')
 
         #Выгрузка из созданного ранее файла csv в Gsheets
         upload_csv = client.import_csv(sheet_with_demping.id, content)
         print('Create new Gsheet tabel successful')
+        return sheet_with_demping
 
+    def send_gmail(self, company_name):
 
-    def send_gmail(self):
-        pass
+        sender = "kostya20041234@gmail.com"
+    # your password = "your password"
+        password = f'{password_gmail}'
+
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.starttls()
+        message = f"Здравствуйте, коллеги, если у вас есть возможность, то большая просьба поправить цены на товары в Gsheets таблице к которой я предоставил Вам доступ,  заранее спасибо и хорошего вам дня!\n https://docs.google.com/spreadsheets/d/{sheet_id}/edit#gid=0"
+
+        try:
+            server.login(sender, password)
+            msg = MIMEText(message)
+            msg["Subject"] = f"Демпинг {company_name} |{DT.datetime.now():%Y-%m-%d}"
+            server.sendmail(sender, 'n.boyar@gazer.com', msg.as_string())
+
+        # server.sendmail(sender, sender, f"Subject: CLICK ME PLEASE!\n{message}")
+
+            print("The message was sent successfully!")
+
+        except Exception as _ex:
+            print( f"{_ex}\nCheck your login or password please!")
 
 
 def main(file_name):
@@ -107,13 +138,14 @@ def main(file_name):
 
 def rozetka_company(file_name):
 
-    
     rozetka = Gmail_message()
     rozetka.compare_data(file_name, 'Розетка', 'Rozetka')
+
     partner_email_1 = ''
     partner_email_2 = ''
     rozetka.write_to_gsheets('Rozetka', partner_email_1, partner_email_2)
    
+    rozetka.send_gmail('Rozetka')
 
 
 if __name__ == '__main__':
@@ -121,3 +153,5 @@ if __name__ == '__main__':
     file_name = 'write_to_csv.csv'
     main(file_name)
     rozetka_company(file_name)
+
+
