@@ -1,5 +1,6 @@
 from asyncio import SendfileNotAvailableError
 import datetime as DT
+from http import client
 import time
 from typing import List, Tuple, Union
 from pathlib import Path
@@ -16,11 +17,15 @@ class Gmail_message():
 
     def take_values(self, file_name):
 
+        global scope 
         scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 
+        global creds
         creds = ServiceAccountCredentials.from_json_keyfile_name('client_secrets.json', scope)
 
+        global client
         client = gspread.authorize(creds)
+
         sheet = client.open('сводная наличия и ррц у партнеров online')
         
         sheet_instance = sheet.get_worksheet(1)
@@ -72,11 +77,6 @@ class Gmail_message():
     #Метод создания таблицы Gsheets с нарушением цены на сайте партнере
     def write_to_gsheets(self, company_name, partner_email_1, partner_email_2):
 
-        scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-
-        creds = ServiceAccountCredentials.from_json_keyfile_name('client_secrets.json', scope)
-
-        client = gspread.authorize(creds)
         content = open(f'{company_name}_to_write.csv', 'r', encoding = 'UTF-8').read()
 
         #создал новую таблцу
@@ -88,7 +88,7 @@ class Gmail_message():
 
         #Доступ к таблице
         sheet_with_demping.share('k.boyar@gazer.com', perm_type = 'user', role = 'writer')
-        sheet_with_demping.share('n.boyar@gazer.com', perm_type = 'user', role = 'writer')
+       # sheet_with_demping.share('n.boyar@gazer.com', perm_type = 'user', role = 'writer')
 
         #sheet_with_demping.share('v.samoylenko@gazer.com', perm_type = 'user', role = 'writer')
         #sheet_with_demping.share('p.gulyk@gazer.com', perm_type = 'user', role = 'writer')
@@ -104,7 +104,6 @@ class Gmail_message():
     def send_gmail(self, company_name):
 
         sender = "kostya20041234@gmail.com"
-    # your password = "your password"
         password = f'{password_gmail}'
 
         server = smtplib.SMTP("smtp.gmail.com", 587)
@@ -112,12 +111,11 @@ class Gmail_message():
         message = f"Здравствуйте, коллеги, если у вас есть возможность, то большая просьба поправить цены на товары в Gsheets таблице к которой я предоставил Вам доступ,  заранее спасибо и хорошего вам дня!\n https://docs.google.com/spreadsheets/d/{sheet_id}/edit#gid=0"
 
         try:
+
             server.login(sender, password)
             msg = MIMEText(message)
             msg["Subject"] = f"Демпинг {company_name} |{DT.datetime.now():%Y-%m-%d}"
-            server.sendmail(sender, 'n.boyar@gazer.com', msg.as_string())
-
-        # server.sendmail(sender, sender, f"Subject: CLICK ME PLEASE!\n{message}")
+            server.sendmail(sender, 'k.boyar@gazer.com', msg.as_string())
 
             print("The message was sent successfully!")
 
@@ -140,7 +138,7 @@ def rozetka_company(file_name):
     partner_email_2 = ''
     rozetka.write_to_gsheets('Rozetka', partner_email_1, partner_email_2)
    
-   # rozetka.send_gmail('Rozetka')
+    rozetka.send_gmail('Rozetka')
 
 def allo_company(file_name):
 
@@ -153,7 +151,7 @@ def allo_company(file_name):
 
     #allo.send_gmail('Allo')
 
-    
+
 def foxtrot_company(file_name):
 
     foxtrot = Gmail_message()
@@ -172,11 +170,11 @@ if __name__ == '__main__':
 
    # Розетка работает отлично
 
-   # rozetka_company(file_name)
+    rozetka_company(file_name)
     
    # Разобраться с ценами, часто выйгружает одинаковые, возможно проблема в библиотеке
 
    # allo_company(file_name)
 
-   #Работает почти хорошо, но выводит одинаковые значени я
-    foxtrot_company(file_name)
+   #Работает отлично
+    #foxtrot_company(file_name)
