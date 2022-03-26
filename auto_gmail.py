@@ -65,7 +65,7 @@ class Gmail_message():
                     demping_price = row[company_name].strip('грн').strip('.').strip('₴').replace('\xa0', '').replace(' ', '')
                     
                     rows =  demping_name,  price_MTI, demping_price
-                    if int(price_MTI) - 1 > int(demping_price) :
+                    if int(price_MTI) - 1 > int(demping_price) and int(demping_price) != 0 :
                         demping.append(rows)
 
         #Создание нового csv файла с уже готовым списом нарушения РРЦ           
@@ -88,7 +88,7 @@ class Gmail_message():
 
         #Доступ к таблице
         sheet_with_demping.share('k.boyar@gazer.com', perm_type = 'user', role = 'writer')
-       # sheet_with_demping.share('n.boyar@gazer.com', perm_type = 'user', role = 'writer')
+        #sheet_with_demping.share('n.boyar@gazer.com', perm_type = 'user', role = 'writer')
 
         #sheet_with_demping.share('v.samoylenko@gazer.com', perm_type = 'user', role = 'writer')
         #sheet_with_demping.share('p.gulyk@gazer.com', perm_type = 'user', role = 'writer')
