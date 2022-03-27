@@ -1,4 +1,3 @@
-from asyncio import SendfileNotAvailableError
 import datetime as DT
 from http import client
 import time
@@ -18,16 +17,16 @@ class Gmail_message():
     def take_values(self, file_name):
 
         global scope 
-        scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+        scope = ['https://spreadsheets.google.com/feeds', 
+                'https://www.googleapis.com/auth/drive']
 
         global creds
-        creds = ServiceAccountCredentials.from_json_keyfile_name('client_secrets.json', scope)
+        creds = ServiceAccountCredentials.from_json_keyfile_name('client_secrets.json',  scope)
 
         global client
         client = gspread.authorize(creds)
 
-        sheet = client.open('сводная наличия и ррц у партнеров online')
-        
+        sheet = client.open('сводная наличия и ррц у партнеров online')        
         sheet_instance = sheet.get_worksheet(1)
 
         #получение количества строк
@@ -37,9 +36,9 @@ class Gmail_message():
     #запись данных в csv
         values = sheet_instance.get_all_values()
 
-        sales_data = pd.DataFrame(values[1:],columns=values[0]) 
+        sales_data = pd.DataFrame(values[1:], columns=values[0]) 
 
-        write_to_csv = sales_data.to_csv(file_name,encoding = 'UTF-8' )
+        write_to_csv = sales_data.to_csv(file_name, encoding = 'UTF-8')
         print('Write complite')
     
 
@@ -65,7 +64,7 @@ class Gmail_message():
                     demping_price = row[company_name].strip('грн').strip('.').strip('₴').replace('\xa0', '').replace(' ', '')
                     
                     rows =  demping_name,  price_MTI, demping_price
-                    if int(price_MTI) - 1 > int(demping_price) and int(demping_price) != 0 :
+                    if int(price_MTI) - 1 > int(demping_price) and int(demping_price) != 0:
                         demping.append(rows)
 
         #Создание нового csv файла с уже готовым списом нарушения РРЦ           
@@ -120,7 +119,7 @@ class Gmail_message():
             print("The message was sent successfully!")
 
         except Exception as _ex:
-            print( f"{_ex}\nCheck your login or password please!")
+            print(f"{_ex}\nCheck your login or password please!")
 
 
 def main(file_name):
@@ -128,7 +127,7 @@ def main(file_name):
     main = Gmail_message()
     main.take_values(file_name)
 
-
+"""
 def rozetka_company(file_name):
 
     rozetka = Gmail_message()
@@ -162,19 +161,36 @@ def foxtrot_company(file_name):
     foxtrot.write_to_gsheets('Foxtrot', partner_email_1, partner_email_2)
 
     #foxtrot.send_gmail('Allo')
+"""
+def companies(file_name):
+
+    emails_main = ['']
+    emails_first = ['']
+    emails_second = ['']
+
+    companies = ['Rozetka', 'Allo', 'Foxtrot']
+    company_method = Gmail_message()
+
+    for company in companies:
+        company_method.compare_data(file_name, company, company)
+        company_method.write_to_gsheets(company, emails_first, emails_second)
+        #company.send_mail()
+
 
 if __name__ == '__main__':
 
     file_name = 'write_to_csv.csv'
     main(file_name)
+    companies(file_name)
 
    # Розетка работает отлично
 
-    rozetka_company(file_name)
+    #rozetka_company(file_name)
     
-   # Разобраться с ценами, часто выйгружает одинаковые, возможно проблема в библиотеке
+   # Разобраться с ценами, часто выйгружает одинаковые, 
+   # Возможно проблема в библиотеке
 
    # allo_company(file_name)
 
-   #Работает отлично
+ #Работает отлично
     #foxtrot_company(file_name)
