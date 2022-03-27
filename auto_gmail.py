@@ -1,3 +1,4 @@
+from asyncio import SendfileNotAvailableError
 import datetime as DT
 from http import client
 import time
@@ -74,26 +75,22 @@ class Gmail_message():
 
 
     #Метод создания таблицы Gsheets с нарушением цены на сайте партнере
-    def write_to_gsheets(self, company_name, partner_email_1, partner_email_2):
+    def write_to_gsheets(self, company_name, email_first, email_second):
 
         content = open(f'{company_name}_to_write.csv', 'r', encoding = 'UTF-8').read()
 
         #создал новую таблцу
         sheet_with_demping = client.create(f'{company_name} | {DT.datetime.now():%Y-%m-%d}')
-
+        share_emails = ['k.boyar@gazer.com','n.boyar@gazer.com',
+                       'v.samoylenko@gazer.com','p.gulyk@gazer.com',
+                       'f{email_first}', 'f{email_second}']
         global sheet_id  
         sheet_id = sheet_with_demping.id
         print(sheet_with_demping)
-
+        
+        for share_email in share_emails:
         #Доступ к таблице
-        sheet_with_demping.share('k.boyar@gazer.com', perm_type = 'user', role = 'writer')
-        #sheet_with_demping.share('n.boyar@gazer.com', perm_type = 'user', role = 'writer')
-
-        #sheet_with_demping.share('v.samoylenko@gazer.com', perm_type = 'user', role = 'writer')
-        #sheet_with_demping.share('p.gulyk@gazer.com', perm_type = 'user', role = 'writer')
-
-        #sheet_with_demping.share(f'{partner_email_1}', perm_type = 'user', role = 'writer')
-        #sheet_with_demping.share(f'{partner_email_2}', perm_type = 'user', role = 'writer')
+            sheet_with_demping.share(share_email, perm_type = 'user', role = 'writer')
 
         #Выгрузка из созданного ранее файла csv в Gsheets
         upload_csv = client.import_csv(sheet_with_demping.id, content)
@@ -127,41 +124,7 @@ def main(file_name):
     main = Gmail_message()
     main.take_values(file_name)
 
-"""
-def rozetka_company(file_name):
 
-    rozetka = Gmail_message()
-    rozetka.compare_data(file_name, 'Розетка', 'Rozetka')
-
-    partner_email_1 = ''
-    partner_email_2 = ''
-    rozetka.write_to_gsheets('Rozetka', partner_email_1, partner_email_2)
-   
-    rozetka.send_gmail('Rozetka')
-
-def allo_company(file_name):
-
-    allo = Gmail_message()
-    allo.compare_data(file_name, 'АЛЛО', 'Allo')
-
-    partner_email_1 = ''
-    partner_email_2 = ''
-    allo.write_to_gsheets('Allo', partner_email_1, partner_email_2)
-
-    #allo.send_gmail('Allo')
-
-
-def foxtrot_company(file_name):
-
-    foxtrot = Gmail_message()
-    foxtrot.compare_data(file_name, 'Фокстрот', 'Foxtrot')
-
-    partner_email_1 = ''
-    partner_email_2 = ''
-    foxtrot.write_to_gsheets('Foxtrot', partner_email_1, partner_email_2)
-
-    #foxtrot.send_gmail('Allo')
-"""
 def companies(file_name):
 
     emails_main = ['']
@@ -182,15 +145,3 @@ if __name__ == '__main__':
     file_name = 'write_to_csv.csv'
     main(file_name)
     companies(file_name)
-
-   # Розетка работает отлично
-
-    #rozetka_company(file_name)
-    
-   # Разобраться с ценами, часто выйгружает одинаковые, 
-   # Возможно проблема в библиотеке
-
-   # allo_company(file_name)
-
- #Работает отлично
-    #foxtrot_company(file_name)
