@@ -33,7 +33,7 @@ class Gmail_message():
         rows_count = len(sheet_instance.col_values(1))
         print(rows_count)
 
-    #запись данных в csv
+        #запись данных в csv
         values = sheet_instance.get_all_values()
 
         sales_data = pd.DataFrame(values[1:], columns=values[0]) 
@@ -49,14 +49,17 @@ class Gmail_message():
         demping = []
         #Чтение данных из csv файла в котором данные из google sheets
         with open (file_name, encoding='UTF-8') as csvfile:
-
             reader = csv.DictReader(csvfile, delimiter = ',')
             #Алгоритм наполнения списка данных
             for row in reader:
 
                 if row['Price MTI'] > row[company_name]:
 
-                    if row[company_name] == '#N/A' or row[company_name] == '-' or row[company_name] == '' or row['Price MTI'] == row[company_name] or row['Price MTI'] == '':
+                    if row[company_name] == '#N/A'\
+                       or row[company_name] == '-'\
+                       or row[company_name] == ''\
+                       or row['Price MTI'] == row[company_name]\
+                       or row['Price MTI'] == '':
                         continue
                     
                     demping_name = row['Name MTI']
@@ -68,7 +71,8 @@ class Gmail_message():
                         demping.append(rows)
 
         #Создание нового csv файла с уже готовым списом нарушения РРЦ           
-        df = pd.DataFrame(demping, columns=['Name','Actual price', 'Your price'])
+        df = pd.DataFrame(demping, 
+                         columns=['Name','Actual price', 'Your price'])
         df.to_csv(file_name_to_write, encoding='UTF-8')          
         print(f'file saved to {file_name_to_write}.csv')  
 
@@ -103,7 +107,11 @@ class Gmail_message():
 
         server = smtplib.SMTP("smtp.gmail.com", 587)
         server.starttls()
-        message = f"Здравствуйте, коллеги, если у вас есть возможность, то большая просьба поправить цены на товары в Gsheets таблице к которой я предоставил Вам доступ,  заранее спасибо и хорошего вам дня!\n https://docs.google.com/spreadsheets/d/{sheet_id}/edit#gid=0"
+        message = f"Здравствуйте, коллеги, если у вас есть возможность,\
+                   то большая просьба поправить цены на товары в Gsheets таблице\
+                   к которой я предоставил Вам доступ,\
+                   заранее спасибо и хорошего вам дня!\n\
+                   https://docs.google.com/spreadsheets/d/{sheet_id}/edit#gid=0"
 
         try:
 
@@ -126,12 +134,13 @@ def main(file_name):
 
 def companies(file_name):
 
+    #Почты партнеров
     emails_first = ['']
     emails_second = ['']
-
+    #Интернет-магазины партнеров
     companies = ['Rozetka', 'Allo', 'Foxtrot']
     company_method = Gmail_message()
-
+    #Цикл рассылки всех пріколов интернет-магазинам партнеров
     for company in companies:
         company_method.compare_data(file_name, company, company)
         company_method.write_to_gsheets(company, emails_first, emails_second)
