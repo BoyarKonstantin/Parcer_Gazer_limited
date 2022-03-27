@@ -1,4 +1,3 @@
-from asyncio import SendfileNotAvailableError
 import datetime as DT
 from http import client
 import time
@@ -127,7 +126,6 @@ def main(file_name):
 
 def companies(file_name):
 
-    emails_main = ['']
     emails_first = ['']
     emails_second = ['']
 
