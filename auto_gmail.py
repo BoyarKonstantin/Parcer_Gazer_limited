@@ -64,7 +64,8 @@ class Gmail_message():
                     
                     demping_name = row['Name MTI']
                     price_MTI = row['Price MTI'].replace('\xa0', '').replace(' ', '')
-                    demping_price = row[company_name].strip('грн').strip('.').strip('₴').replace('\xa0', '').replace(' ', '')
+                    demping_price = row[company_name].strip('грн').strip('.').strip('₴').replace('\xa0', '').replace(
+                                                      ' ', '').replace('грн', '').replace(',00.', '').replace(',00 грн.','')
                     
                     rows =  demping_name,  price_MTI, demping_price
                     if int(price_MTI) - 1 > int(demping_price) and int(demping_price) != 0:
@@ -84,9 +85,9 @@ class Gmail_message():
 
         #создал новую таблцу
         sheet_with_demping = client.create(f'{company_name} | {DT.datetime.now():%Y-%m-%d}')
-        share_emails = ['k.boyar@gazer.com','n.boyar@gazer.com',
-                       'v.samoylenko@gazer.com','p.gulyk@gazer.com',
-                       'f{email_first}', 'f{email_second}']
+        share_emails = ['k.boyar@gazer.com', 'n.boyar@gazer.com']
+                       #'v.samoylenko@gazer.com','p.gulyk@gazer.com',
+                       #'f{email_first}', 'f{email_second}']
         global sheet_id  
         sheet_id = sheet_with_demping.id
         print(sheet_with_demping)
@@ -100,10 +101,12 @@ class Gmail_message():
         print('Create new Gsheet tabel successful')
         return sheet_with_demping
 
-    def send_gmail(self, company_name):
-
-        sender = "kostya20041234@gmail.com"
-        password = f'{password_gmail}'
+    def send_gmail(self, company_name, email_first, email_second):
+        
+        sender = "k.boyar@gazer.com"
+        partners = ['n.boyar@gazer.com']#, 'k.boyar@gazer.com', 'v.samoylenko@gazer.com',
+                    #'p.gulyk@gazer.com', f'{email_first}', f'{email_second}']
+        password = f'{password_gazer}'
 
         server = smtplib.SMTP("smtp.gmail.com", 587)
         server.starttls()
@@ -118,7 +121,9 @@ class Gmail_message():
             server.login(sender, password)
             msg = MIMEText(message)
             msg["Subject"] = f"Демпинг {company_name} |{DT.datetime.now():%Y-%m-%d}"
-            server.sendmail(sender, 'k.boyar@gazer.com', msg.as_string())
+
+            for send in partners:
+                server.sendmail(sender, send, msg.as_string())
 
             print("The message was sent successfully!")
 
@@ -137,15 +142,22 @@ def companies(file_name):
     #Почты партнеров
     emails_first = ['']
     emails_second = ['']
+
     #Интернет-магазины партнеров
-    companies = ['Rozetka', 'Allo', 'Foxtrot']
+    companies = ['Rozetka', 'Allo', 'Foxtrot', 
+                'Epicentr', 'Citrus', 
+                'Eldorado', 'Baza autozvuka', 
+                'Winauto', 'ZZHUK', 'ATL', 'Stylus', 'Notebooker']
+                #'Epicentr', 'BRAIN', 
+
     company_method = Gmail_message()
+
     #Цикл рассылки всех пріколов интернет-магазинам партнеров
     for company in companies:
+
         company_method.compare_data(file_name, company, company)
         company_method.write_to_gsheets(company, emails_first, emails_second)
-        #company.send_mail()
-
+        company_method.send_gmail(company, emails_first, emails_second)
 
 if __name__ == '__main__':
 
