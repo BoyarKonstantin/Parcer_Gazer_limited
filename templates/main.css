@@ -1,0 +1,121 @@
+* {
+    font-family: 'Montserrat', sans-serif;
+    font-family: 'Murecho', sans-serif;
+    font-family: 'Open Sans', sans-serif;
+}
+
+body {
+    background-color: #323E58;
+}
+
+h1 {
+    color: white;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 128px;
+    height: 50%;
+    text-align: center;
+
+}
+
+form {
+    text-align: center;
+}
+
+select {
+    width: 50%;
+    padding: 7px 7px;
+    border: none;
+    border-radius: 4px;
+    background-color: #f1f1f1;
+}
+
+
+.head {
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 78px;
+    text-align: center;
+    padding-top: 12%;
+    opacity: .5;
+}
+
+@keyframes flow {
+    0% {
+        background-position: 0 50%;
+
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0 50%;
+    }
+}
+
+/* HEADER */
+
+.header {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 10px;
+    background: #192331;
+    font-family: Murecho;
+    color: #fff;
+}
+
+.header__section {
+    display: flex;
+    align-items: center;
+}
+
+.header__item {
+    padding: 10px 15px;
+    align-items: center;
+    font-size: 18px;
+    margin-left: 5px;
+}
+
+.headerlogo {
+    font-weight: bold;
+    color: #fff;
+}
+
+a{
+    text-decoration: none;
+    color: #fff;
+}
+
+/* MENU BUTTON */
+
+ul {
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+}
+
+li {
+    position: relative;
+}
+
+li:focus-within > .submenu,
+li:hover > .submenu {
+    display: flex;
+    clip: auto;
+    width: auto;
+    height: auto;
+    margin: 0;
+}
+
+
+.submenu {
+    flex-direction: column;
+    position: absolute;
+    clip: rect(0 0 0 0);
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+
+}
