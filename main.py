@@ -108,13 +108,27 @@ def ZZHUK_parcer():
     try:
         ZZHUK = subprocess.run(['python','ZZHUK_parcer.py'])
     except Exception as e:
-        print('Process failed: ', e)   
+        print('Process failed: ', e)
+
+def stocom_parcer():
+    try:
+        ZZHUK = subprocess.run(['python','130Parcer.py'])
+    except Exception as e:
+        print('Process failed: ', e) 
+
+def comfy_parcer():
+    try:
+        ZZHUK = subprocess.run(['python','ComfyParcer.py'])
+    except Exception as e:
+        print('Process failed: ', e)                   
 
 if  __name__  ==  "__main__": 
     
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
         futures = []
-        for f in [Rozetka_Parcer, ALLO_Parcer, Eldo_Parcer, 
+        for f in [stocom_parcer, comfy_parcer,
+        
+                  Rozetka_Parcer, ALLO_Parcer, Eldo_Parcer, 
 
                   Foxtrot_Parcer, ATL_Parcer, Brain_ITBOX_parser, 
 
@@ -122,7 +136,9 @@ if  __name__  ==  "__main__":
 
                   Foxtrot_Parcer, MTI_Parcer, Winauto_Parcer, 
 
-                  Stylus_Parcer, TTT_Parcer, ZZHUK_parcer]:
+                  Stylus_Parcer, TTT_Parcer, ZZHUK_parcer,
+
+                  ]:
 
             futures.append(executor.submit(f))
     
@@ -132,4 +148,3 @@ if  __name__  ==  "__main__":
 
     #Allo.start()
     #Eldo.start()
-    #Fox.start()
