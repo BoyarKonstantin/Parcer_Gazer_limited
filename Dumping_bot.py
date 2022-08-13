@@ -12,6 +12,8 @@ from aiogram.utils import executor
 from ParcerAll import main
 from subprocess import *
 import datetime as DT
+
+
 bot = Bot(token = token)
 dp = Dispatcher(bot)
 
