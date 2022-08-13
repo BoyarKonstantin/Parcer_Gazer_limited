@@ -4,6 +4,7 @@
 __author__ = 'ipetrash'
 
 import datetime as DT
+from webdriver_manager.firefox import GeckoDriverManager
 
 from typing import List, Tuple, Union
 from pathlib import Path
@@ -11,6 +12,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 # pip install pandas
 import pandas as pd
+from selenium.webdriver.common.by import By
 
 # pip install selenium
 from selenium import webdriver
@@ -55,10 +57,8 @@ def parse(url_TV,url_registrators,url_magnitols: str) -> List[Tuple[str, str, st
     options.add_argument('--headless')
 
     items = []
-
     driver = webdriver.Firefox(options=options)
     driver.implicitly_wait(0.1)
-
     try:
 
         while True:
@@ -160,7 +160,7 @@ def parse(url_TV,url_registrators,url_magnitols: str) -> List[Tuple[str, str, st
             print('Load:', url_magnitols)
             driver.get(url_magnitols)
 
-            for item_el in driver.find_elements_by_css_selector(".product-card"):
+            for item_el in driver.find_elements(By.CSS_SELECTOR, ".product-card"):
 
                 name = item_el.find_element_by_css_selector('.product-card__title').text.strip('Парктронік').strip(
                                                             'Монітор для задніх пасажирів').rstrip(

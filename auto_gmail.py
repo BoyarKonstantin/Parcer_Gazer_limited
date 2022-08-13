@@ -46,7 +46,7 @@ class Gmail_message():
         write_to_csv = sales_data.to_csv(file_name, encoding = 'UTF-8')
         write_to_csv_stock = data_of_stock.to_csv(file_name_of_stock, encoding='utf-8')
 
-        print('Write complite')
+        print('Write complete')
     
 
     def compare_data(self, file_name, company_name, company_name_to_write, file_name_of_stock): 
