@@ -231,39 +231,11 @@ def companies(file_name, file_name_of_stock):
 
     #Почты партнеров
     emails_first = {
-                    '130com': 'ap@130.com.ua',
-                    'Comfy': 'kostya20041234@gmail.com',
-                    'Rozetka' : 'kostya20041234@gmail.com',
-                    #'Allo': 'opezdalya@gmail.com'
-                   # 'Rozetka': 'dyakova@rozetka.com.ua', 
-                    'Allo': 'allo-km63@allo.ua', 
-                    'Foxtrot': 'Skarlato-V@foxtrot.ua', 
-                    'Citrus': 'nelin@citrus.com.ua', 
-                    'Eldorado': 'Alexandr.Petrunek@eldorado.ua', 
-                    'Baza autozvuka': 'zakaz.m@avtozvuk.ua', 
-                    'Winauto': 'e.adamenko@winauto.ua', 
-                    'ZZHUK': 'ostap.protsiv@zhuk.mobi', 
-                    'ATL': 'accessories@tlauto.com.ua', 
-                    'Stylus': 'sal@stylus.com.ua',
-                     'Notebooker': 'kostya20041234@gmail.com'
+  
                      }
 
     emails_second = {
-                    '130com': 'kostya20041234@gmail.com',
-                    'Comfy': 'kostya20041234@gmail.com',
-                    'Rozetka': 'opezdalya@gmail.com',
-                    #'Allo': 'kostya20041234@gmail.com'
-                    # 'Rozetka': 'nagorodnij@rozetka.com.ua', 
-                      'Allo': 'allo-mp94@allo.ua',
-                     'Foxtrot': 'Makovenko-A@foxtrot.ua', 
-                     'Citrus': 'kostya20041234@gmail.com',
-                     'Eldorado': 'Igor.Statkevich@eldorado.ua', 
-                     'Baza autozvuka': 'opezdalya@gmail.com', 
-                     'Winauto': 'annav.adamenko@gmail.com',
-                     'ZZHUK': 'opezdalya@gmail.com', 
-                     'ATL': 'kovalchenko@atl.ua', 
-                     'Stylus': 'pol@stylus.com.ua',
-                     'Notebooker': 'opezdalya@gmail.com'
+                    
                     }       
 
     #Интернет-магазины партнеров
